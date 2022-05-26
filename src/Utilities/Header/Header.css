@@ -1,0 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Smooch&display=swap');
+
+
+nav a {
+    text-decoration: none;
+    color: white;
+    font-size: large;
+}
+
+nav .title {
+    color: red;
+    font-family: 'Smooch', cursive;
+    font-size: 36px;
+}
+
+nav a:hover {
+    color: red;
+}
