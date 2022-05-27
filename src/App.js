@@ -7,6 +7,8 @@ import Footer from './Utilities/Footer/Footer';
 import Distribution from './Pages/Distribution/Distribution';
 import User from './Pages/User/User';
 import SetTitle from './Utilities/SetTItle/SetTitle';
+import Payments from './Pages/Payments/Payments';
+import Expenses from './Pages/Expenses/Expenses';
 
 function App() {
   return (
@@ -19,6 +21,10 @@ function App() {
         }></Route>
         <Route path='/Home' element={
           <Home></Home>}></Route>
+        <Route path='/payments' element={
+          <Payments></Payments>}></Route>
+        <Route path='/expenses' element={
+          <Expenses></Expenses>}></Route>
         <Route path='/distribution' element={
           <Distribution></Distribution>}></Route>
         <Route path='/user/:id' element={

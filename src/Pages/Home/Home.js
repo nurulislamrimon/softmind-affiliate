@@ -1,80 +1,49 @@
-import React, { useRef, useState } from 'react';
-import { Button, Form } from 'react-bootstrap';
+import React, { useRef, useState } from 'react'
+import { Button, Card } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import useCollectExpenses from '../../CustomHooks/useCollectExpenses';
 import useCollectPayments from '../../CustomHooks/useCollectPayments';
 import SetTitle from '../../Utilities/SetTItle/SetTitle';
+import Payments from '../Payments/Payments';
 
 const Home = () => {
-    const [bdt, setBdt] = useState('BDT');
-    const dollar = useRef('$');
-    const { payments, setPayments } = useCollectPayments();
-
-
-    const handleFormSubmit = (e) => {
-        e.preventDefault();
-        const date = e.target.date.value;
-        const platform = e.target.platform.value;
-        const paymentDollar = e.target.paymentDollar.value;
-        const exchangeRate = e.target.exchangeRate.value;
-        const paymentBdt = e.target.paymentBdt.value;
-        const newPayment = { siNo: payments.length + 1, date, platform, paymentDollar, exchangeRate, paymentBdt }
-        fetch(`http://localhost:5000/payments`, {
-            method: 'post',
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify(newPayment)
-        })
-            .then(res => res.json())
-            .then(data => data.acknowledged && alert('New payment added'));
-        window.location.reload();
-    }
-
-    const handleBdt = (e) => {
-        const taka = dollar.current.value * e.target.value;
-        setBdt(taka)
-
-    }
+    const navigate = useNavigate();
+    const { payments, setPayments, totalBdt } = useCollectPayments();
+    const { expenses, setExpenses, totalExpenses } = useCollectExpenses();
     return (
         <div>
             <SetTitle title='Home'></SetTitle>
+            <h1 className='text-center'>Welcome</h1>
+            <div className="d-flex">
+                <Card className='w-50 my-3 text-center'>
+                    <Card.Header>Payments</Card.Header>
+                    <Card.Body>
+                        <Card.Title>This payments has done!</Card.Title>
+                        <Card.Text>We received <b>{payments.length}</b> payments of total <b>{totalBdt}</b> Taka
+                        </Card.Text>
+                        <Button onClick={() => navigate('/payments')} variant="dark">Go to the Payment page</Button>
+                    </Card.Body>
+                </Card>
+                <Card className='w-50 my-3 text-center'>
+                    <Card.Header>Expenses</Card.Header>
+                    <Card.Body>
+                        <Card.Title>Our all expenses!</Card.Title>
+                        <Card.Text>We made <b>{expenses.length}</b> expenses of total <b>{totalExpenses}</b> Taka
+                        </Card.Text>
+                        <Button onClick={() => navigate('/expenses')} variant="dark">Go to the Expense page</Button>
+                    </Card.Body>
+                </Card>
+            </div>
 
-            <form onSubmit={handleFormSubmit} className='py-3 mx-auto'>
-                <input type="date" name='date' className='mx-2' required />
-
-                <select type="select" name='platform' className='mx-2' required>
-                    <option value="Yajni">Yajni</option>
-                    <option value="Optimize">Optimize</option>
-                </select>
-                <input type="text" ref={dollar} name='paymentDollar' className='mx-2' placeholder='$Amount' />
-
-                <input type="text" name='exchangeRate' className='mx-2' placeholder='Exchange Rate' onChange={handleBdt} required />
-                <input type="text" name='paymentBdt' className='mx-2' value={bdt} disabled />
-                <button className='btn btn-dark'>Add this payment</button>
-            </form>
-            <table className='table table-dark table-striped'>
-                <thead>
-                    <tr>
-                        <th className='text-center'>Si No.</th>
-                        <th className='text-center'>Date</th>
-                        <th className='text-center'>Platform</th>
-                        <th className='text-center'>Amount</th>
-                        <th className='text-center'>Rate</th>
-                        <th className='text-center'>Taka(BDT)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {payments.map(payment =>
-                        <tr key={payment._id}>
-                            <td className='text-center'>{payment.siNo}</td>
-                            <td className='text-center'>{payment.date}</td>
-                            <td className='text-center'>{payment.platform}</td>
-                            <td className='text-center'>{payment.paymentDollar}</td>
-                            <td className='text-center'>{payment.exchangeRate}</td>
-                            <td className='text-center'>{payment.paymentBdt}</td>
-                        </tr>
-                    )}
-                </tbody>
-            </table>
+            <Card className='my-3 text-center'>
+                <Card.Header>Remaining balance</Card.Header>
+                <Card.Body>
+                    <Card.Title>Cash and savings!</Card.Title>
+                    <Card.Text> <b>{totalBdt - totalExpenses}</b> Taka
+                    </Card.Text>
+                    <Button onClick={() => navigate('/distribution')} variant="dark">Go to the Distribution page</Button>
+                </Card.Body>
+            </Card>
         </div>
     );
 };
