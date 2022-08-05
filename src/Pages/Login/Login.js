@@ -1,15 +1,28 @@
 import React from 'react';
 import { useForm } from "react-hook-form";
+import { useSignInWithEmailAndPassword, useSignInWithFacebook, useSignInWithGoogle } from 'react-firebase-hooks/auth';
+import auth from '../../firebase.init';
+import { useNavigate } from 'react-router-dom';
+import SpinnerLoad from '../../Utilities/SpinnerLoad';
 
 const Login = () => {
-    const { register, handleSubmit, watch, formState: { errors } } = useForm();
-    const onSubmit = data => console.log(data);
+    const [signInWithEmailAndPassword, user, loading, error,] = useSignInWithEmailAndPassword(auth);
+    const [signInWithGoogle, Guser, Gloading, Gerror] = useSignInWithGoogle(auth);
+    const [signInWithFacebook, Fuser, Floading, Ferror] = useSignInWithFacebook(auth);
+    const { register, handleSubmit, formState: { errors } } = useForm();
+    const navigate = useNavigate();
 
-    console.log(watch("example")); // watch input value by passing the name of it
+    const onSubmit = ({ email, password }) => signInWithEmailAndPassword(email, password);
+
+    (loading || Gloading || Floading) && <SpinnerLoad />
+    (user?.user?.uid || Guser?.uid || Fuser?.uid) && navigate('/');
+
+
     return (
         <section>
             <div className='lg:w-2/4 mx-auto'>
                 <form onSubmit={handleSubmit(onSubmit)} className='w-full grid gap-4'>
+                    <h1 className='text-5xl text-center'>Login</h1>
                     {/* email input field */}
                     <div className="form-control w-full max-w-xs mx-auto">
                         <label className="label">
@@ -36,6 +49,15 @@ const Login = () => {
                     </div>
                     <input type="submit" className='btn btn-primary w-full max-w-xs my-5 mx-auto' />
                 </form>
+                {/* divider */}
+                <div className="flex flex-col w-full border-opacity-50">
+                    <div className="divider">Social</div>
+                </div>
+                {/* social auth */}
+                <div className="grid grid-cols-2 justify-center">
+                    <button onClick={() => signInWithGoogle()} className='btn btn-accent w-full max-w-xs my-5 mx-auto'>Login with Google</button>
+                    <button onClick={() => signInWithFacebook()} className='btn btn-primary w-full max-w-xs my-5 mx-auto'>Login with Google</button>
+                </div>
             </div>
         </section>
     );
