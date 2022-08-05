@@ -15,8 +15,9 @@ const Login = () => {
     const onSubmit = ({ email, password }) => signInWithEmailAndPassword(email, password);
 
     (loading || Gloading || Floading) && <SpinnerLoad />;
-    (user || Guser || Fuser) && navigate('/');
+    (user?.user?.uid || Guser || Fuser) && navigate('/');
 
+    console.log(error?.message || Gerror?.message || Ferror?.message);
 
     return (
         <section>
@@ -47,13 +48,15 @@ const Login = () => {
                             </label>
                         }
                     </div>
-                    {(error || Gerror || Ferror) && <p>{error || Gerror || Ferror}</p>}
+
+                    {(error) && <p className='text-red-600 text-center'>{error?.message}</p>}
                     <input type="submit" className='btn btn-primary w-full max-w-xs my-5 mx-auto' />
                 </form>
                 {/* divider */}
                 <div className="flex flex-col w-full border-opacity-50">
                     <div className="divider">Social</div>
                 </div>
+                {(Gerror || Ferror) && <p className='text-red-600 text-center'>{Gerror?.message || Ferror?.message}</p>}
                 {/* social auth */}
                 <div className="grid grid-cols-2 justify-center">
                     <button onClick={() => signInWithGoogle()} className='btn btn-accent w-full max-w-xs my-5 mx-auto'>Login with Google</button>
