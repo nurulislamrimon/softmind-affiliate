@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from "react-hook-form";
 import { useSignInWithEmailAndPassword, useSignInWithFacebook, useSignInWithGoogle } from 'react-firebase-hooks/auth';
 import auth from '../../firebase.init';
@@ -14,8 +14,8 @@ const Login = () => {
 
     const onSubmit = ({ email, password }) => signInWithEmailAndPassword(email, password);
 
-    (loading || Gloading || Floading) && <SpinnerLoad />
-    (user?.user?.uid || Guser?.uid || Fuser?.uid) && navigate('/');
+    (loading || Gloading || Floading) && <SpinnerLoad />;
+    (user || Guser || Fuser) && navigate('/');
 
 
     return (
@@ -47,6 +47,7 @@ const Login = () => {
                             </label>
                         }
                     </div>
+                    {(error || Gerror || Ferror) && <p>{error || Gerror || Ferror}</p>}
                     <input type="submit" className='btn btn-primary w-full max-w-xs my-5 mx-auto' />
                 </form>
                 {/* divider */}

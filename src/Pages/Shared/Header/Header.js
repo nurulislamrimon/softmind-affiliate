@@ -6,13 +6,13 @@ import auth from '../../../firebase.init';
 
 const Header = () => {
     const menus = [
-        <li key={1}><Link to='/about'>Home</Link></li>,
-        <li key={2}><Link to='/about'>Payment</Link></li>,
-        <li key={3}><Link to='/about'>Expenses</Link></li>,
+        <li key={1}><Link to='/'>Home</Link></li>,
+        <li key={2}><Link to='/statement'>Statement</Link></li>,
+        <li key={3}><Link to='/deposit'>Deposit</Link></li>,
+        <li key={4}><Link to='/payments'>Payments</Link></li>,
+        <li key={5}><Link to='/expenses'>Expenses</Link></li>,
     ]
     const [user] = useAuthState(auth);
-
-    console.log(user);
     return (
         <header className='bg-base-200'>
             <div className="navbar">
